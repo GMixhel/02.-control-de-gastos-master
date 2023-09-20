@@ -40,6 +40,7 @@ h1 {
 
 h2 {
     font-size: 3rem;
+    margin-bottom: 3rem;
 }
 
 .sombra {
@@ -303,8 +304,9 @@ main {
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
-    margin-bottom: 2rem;
+    //margin-bottom: 2rem;
     width: 100%;
+    padding: 2rem ;
 }
 
 .cantidad-gasto {
@@ -428,24 +430,32 @@ body .modal {
 }
 
 /*** SWIPE LIST OVERRIDES **/
-.swipe-action__leading {
+.swipeable-list-item .swipeable-list-item__leading-actions {
     background-color: var(--azul);
     color: var(--blanco);
-    margin-bottom: 2rem;
+    
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        align-items: center;
 }
 
-.swipe-action__trailing {
+.swipeable-list-item .swipeable-list-item__trailing-actions {
+   
+    text-align: center;
     background-color: #db2777;
-    margin-bottom: 2rem;
     color: var(--blanco);
-}
-
-.swipeable-list .swipe-action {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.4rem;
-    text-align: right;
+}
+
+.swipeable-list .swipe-action{
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: 2.4rem;   
+    
 }
 
 

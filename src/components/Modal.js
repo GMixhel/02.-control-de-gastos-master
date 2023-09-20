@@ -1,29 +1,56 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Mensaje from './Mensaje'
 import CerrarBtn from '../img/cerrar.svg'
 
-const Modal = ({ setModal, animarModal, setAnimarModal }) => {
- 
-    const [nombre, setNombre] = useState('');
-    const [cantidad, setCantidad] = useState('');
-    const [categoria, setCategoria] = useState('');
- 
- 
-    const handleCerrarModal = () => {    
-      setAnimarModal(false);
-      
-      setTimeout(() => {
-        setModal(false);
-      }, 500);
-    };
-    
-    const handleSubmit = e => {
-        e.preventDefault()
+const Modal = ({
+  setModal,
+  animarModal,
+  setAnimarModal,
+  guardarGasto,
+  gastoEditar,
+  setGastoEditar
+}) => {
+  const [nombre, setNombre] = useState("");
+  const [cantidad, setCantidad] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [id, setId] = useState("");
+  const [fecha, setFecha] = useState("");
 
-        if ([nombre, cantidad, categoria].includes('')) {
-            console.log('falló la validación')
-            return
-        }
+  useEffect(() => {
+    if (Object.keys(gastoEditar).length > 0) {
+      setNombre(gastoEditar.nombre)
+      setCantidad(gastoEditar.cantidad)
+      setCategoria(gastoEditar.categoria)
+      setId(gastoEditar.id)
+      setFecha(gastoEditar.fecha)
     }
+  }, []);
+
+  const handleCerrarModal = () => {
+    setAnimarModal(false);
+   
+    
+    setTimeout(() => {
+      setModal(false);
+       setGastoEditar({});
+    }, 500);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if ([nombre, cantidad, categoria].includes("")) {
+      setMensaje("Todos los campos son obligatorios");
+
+      setTimeout(() => {
+        setMensaje("");
+      }, 1500);
+      return;
+    }
+
+    guardarGasto({ nombre, cantidad, categoria, id, fecha });
+  };
 
   return (
     <div className="modal ">
@@ -31,8 +58,12 @@ const Modal = ({ setModal, animarModal, setAnimarModal }) => {
         <img alt="cerrar" src={CerrarBtn} onClick={handleCerrarModal} />
       </div>
 
-      <form onSubmit={handleSubmit} className={`formulario ${animarModal ? "animar" : "cerrar"}`}>
-        <legend>Nuevo Gasto</legend>
+      <form
+        onSubmit={handleSubmit}
+        className={`formulario ${animarModal ? "animar" : "cerrar"}`}
+      >
+        <legend>{gastoEditar.nombre ? "Editar gasto" : "Nuevo Gasto"}</legend>
+        {mensaje && <Mensaje tipo="error">{mensaje}</Mensaje>}
 
         <div className="campo">
           <label htmlFor="nombre">Nombre de Gasto</label>
@@ -73,7 +104,10 @@ const Modal = ({ setModal, animarModal, setAnimarModal }) => {
           </select>
         </div>
 
-        <input type="submit" value="Añadir Gastos" />
+        <input
+          type="submit"
+          value={gastoEditar.nombre ? "Guardar Cambios" : "Añadir Gasto"}
+        />
       </form>
     </div>
   );
