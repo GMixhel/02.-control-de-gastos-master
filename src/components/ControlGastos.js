@@ -37,7 +37,6 @@ const ControlGastos = ({ presupuesto, gastos }) => {
         })
   }
   
-  
 
   return (
     <>
@@ -49,6 +48,7 @@ const ControlGastos = ({ presupuesto, gastos }) => {
               trailColor: '#f5f5f5'
             })}
             value={porcentaje}
+            text={`${porcentaje}% Gastado`}
           />
         </div>
 
