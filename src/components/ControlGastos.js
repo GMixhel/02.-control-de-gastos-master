@@ -2,20 +2,27 @@ import React, { useEffect, useState } from 'react'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 
-const ControlGastos = ({ presupuesto, gastos }) => {
-
+const ControlGastos = ({
+  presupuesto,
+  gastos,
+  setGastos,
+  setPresupuesto,
+  setIsValidPresupuesto ,
+}) => {
   const [disponible, setDisponible] = useState(0);
   const [gastado, setGastado] = useState(0);
-  const [porcentaje, setPorcentaje] = useState(0)
+  const [porcentaje, setPorcentaje] = useState(0);
 
   useEffect(() => {
-    console.log(gastos)
-    const totalGastado = gastos.reduce((total, gasto) => gasto.cantidad + total, 0);
+    const totalGastado = gastos.reduce(
+      (total, gasto) => gasto.cantidad + total,
+      0
+    );
 
     const totalDisponible = presupuesto - totalGastado;
 
-    setGastado(totalGastado)
-    setDisponible(totalDisponible)
+    setGastado(totalGastado);
+    setDisponible(totalDisponible);
 
     const nuevoPorcentaje = (
       ((presupuesto - totalDisponible) / presupuesto) *
@@ -25,18 +32,25 @@ const ControlGastos = ({ presupuesto, gastos }) => {
     setTimeout(() => {
       setPorcentaje(nuevoPorcentaje);
     }, 1000);
-    
-  }, [gastos])
-  
+  }, [gastos]);
 
+  const handleReset = () => {
+    // eslint-disable-next-line no-restricted-globals
+    const resultado = confirm("Deseas reiniciar presupuesto y gastos");
 
-    const formatearCantidad = (cantidad) => {
-        return cantidad.toLocaleString('en-ES', {
-            style: 'currency',
-            currency: 'EUR'
-        })
-  }
-  
+    if (resultado) {
+      setGastos([]);
+      setPresupuesto("");
+      setIsValidPresupuesto(false);
+    }
+  };
+
+  const formatearCantidad = (cantidad) => {
+    return cantidad.toLocaleString("en-ES", {
+      style: "currency",
+      currency: "EUR",
+    });
+  };
 
   return (
     <>
@@ -44,8 +58,9 @@ const ControlGastos = ({ presupuesto, gastos }) => {
         <div>
           <CircularProgressbar
             styles={buildStyles({
-              pathColor: '#3b82f6',
-              trailColor: '#f5f5f5'
+              pathColor: porcentaje > 100 ? "#DC2626" : "#3b82f6",
+              trailColor: "#f5f5f5",
+              textColor: porcentaje > 100 ? "#DC2626" : "#3b82f6",
             })}
             value={porcentaje}
             text={`${porcentaje}% Gastado`}
@@ -53,10 +68,13 @@ const ControlGastos = ({ presupuesto, gastos }) => {
         </div>
 
         <div className="contenido-presupuesto">
+          <button className='reset-app' type='button' onClick={handleReset}>Reiniciar App</button>
           <p>
             <span>Presupuesto:</span> {formatearCantidad(Number(presupuesto))}
           </p>
-          <p>
+
+          {}
+          <p className={disponible < 0 ? "negativo" : ""}>
             <span>Disponible:</span> {formatearCantidad(disponible)}
           </p>
           <p>
